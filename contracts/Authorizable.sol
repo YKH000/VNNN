@@ -6,7 +6,7 @@ contract Authorizable is Ownable {
     mapping(address => bool) public _authorizedMinters;
 
     modifier onlyAuthorized() {
-        require(_authorizedMinters[msg.sender]."VNNN: Caller not authorized to mint tokens");
+        require(_authorizedMinters[msg.sender],"VNNN: Caller not authorized to mint tokens");
         _;
     }
 
