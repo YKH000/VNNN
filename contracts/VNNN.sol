@@ -21,7 +21,7 @@ contract VNNN is ERC20, Authorizable {
         return 4;
     }
 
-    function intAmount(uint input) public view returns (uint){
+    function intAmount(uint256 input) public view returns (uint256){
         return input * 10 ** decimals();
     }
 
