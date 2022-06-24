@@ -42,4 +42,8 @@ describe("VNNN Test 1", function () {
       expect(await vnnn.intAmount(5)).to.equal(50000);
     });
   });
+
+  describe("Transactions", function () {
+    //Placeholder for tests relating to transactions
+  });
 });
