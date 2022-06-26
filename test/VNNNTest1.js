@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { ethers } = require("hardhat");
+// const { ethers } = require("hardhat");
 
 describe("VNNN Test 1", function () {
   let owner;
@@ -45,5 +45,25 @@ describe("VNNN Test 1", function () {
 
   describe("Transactions", function () {
     //Placeholder for tests relating to transactions
+    it("Should transfer integer amounts less than an address's balance correctly", async function () {
+      await vnnn.transfer(addr1.address, 1000000);
+      expect(await vnnn.balanceOf(addr1.address)).to.equal(1000000);
+      expect(await vnnn.balanceOf(owner.address)).to.equal(9999000000);
+    });
+
+    it("Should revert an attempt to transfer more than an address's balance", async function () {
+      await vnnn.transfer(addr1.address, 1000000);
+      await expect(
+        vnnn.connect(addr1).transfer(addr2.address, 2000000)
+      ).to.be.revertedWith("ERC20: transfer amount exceeds balance");
+    });
+
+    it("Should revert transfers of decimal amounts", async function () {
+      await expect(vnnn.transfer(addr1.address, 16.5)).to.be.reverted;
+    });
+
+    it("Should revert transfers of negative amounts", async function () {
+      await expect(vnnn.transfer(addr1.address, -100)).to.be.reverted;
+    });
   });
 });
