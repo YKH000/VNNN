@@ -1,4 +1,5 @@
 const { expect } = require("chai");
+const { constants } = require("@openzeppelin/test-helpers");
 // const { ethers } = require("hardhat");
 
 describe("Test Authorizable and Mint/Burn", function () {
@@ -88,5 +89,14 @@ describe("Test Authorizable and Mint/Burn", function () {
       await vnnn.mint(addr1.address, 100);
       expect(await vnnn.totalSupply()).to.equal(10000000100);
     });
+
+    it("Should emit a Transfer event after minting", async function () {
+      await vnnn.addAuthorized(owner.address);
+      await expect(vnnn.mint(addr1.address, 100))
+        .to.emit(vnnn, "Transfer")
+        .withArgs(constants.ZERO_ADDRESS, addr1.address, 100);
+    });
+
+    //Should not allow mint to overflow totalSupply
   });
 });
