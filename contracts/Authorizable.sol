@@ -21,7 +21,6 @@ contract Authorizable is Ownable {
 
     function revokeAuthorized(address _toRemove) onlyOwner public {
         require(_toRemove != address(0));
-        require(_toRemove != msg.sender);
         _authorizedMinters[_toRemove] = false;
         emit revoked(_toRemove);
     }
