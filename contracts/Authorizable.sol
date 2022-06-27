@@ -10,15 +10,20 @@ contract Authorizable is Ownable {
         _;
     }
 
+    event authorized(address indexed minter);
+    event revoked(address indexed minter);
+
     function addAuthorized(address _toAdd) onlyOwner public {
         require(_toAdd != address(0));
         _authorizedMinters[_toAdd] = true;
+        emit authorized(_toAdd);
     }
 
     function revokeAuthorized(address _toRemove) onlyOwner public {
         require(_toRemove != address(0));
         require(_toRemove != msg.sender);
         _authorizedMinters[_toRemove] = false;
+        emit revoked(_toRemove);
     }
 
     function isAuthorized(address _minter) public view returns (bool) {
