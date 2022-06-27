@@ -43,12 +43,18 @@ describe("VNNN Test 1", function () {
     });
   });
 
-  describe("Transactions", function () {
+  describe("Transfers", function () {
     //Placeholder for tests relating to transactions
     it("Should transfer integer amounts less than an address's balance correctly", async function () {
       await vnnn.transfer(addr1.address, 1000000);
       expect(await vnnn.balanceOf(addr1.address)).to.equal(1000000);
       expect(await vnnn.balanceOf(owner.address)).to.equal(9999000000);
+    });
+
+    it("Should emit a Transfer event when a transfer is successful", async function () {
+      await expect(vnnn.transfer(addr1.address, 100))
+        .to.emit(vnnn, "Transfer")
+        .withArgs(owner.address, addr1.address, 100);
     });
 
     it("Should revert an attempt to transfer more than an address's balance", async function () {
