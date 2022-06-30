@@ -3,7 +3,7 @@ pragma solidity >=0.8.0 <0.9.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Authorizable is Ownable {
-    mapping(address => bool) public _authorizedMinters;
+    mapping(address => bool) private _authorizedMinters;
 
     modifier onlyAuthorized() {
         require(_authorizedMinters[msg.sender],"VNNN: Caller not authorized to mint tokens");
