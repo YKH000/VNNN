@@ -9,7 +9,7 @@ contract VNNN is ERC20, Authorizable {
     mapping(address => mapping(address => bool)) private _vnnnPermitted;
 
     constructor() ERC20("VNNN", "VNNN") {
-        _mint(msg.sender, 1000000 * 10 ** decimals());
+        _mint(msg.sender, 10000000 * 10 ** decimals());
     }
 
     modifier onlyVNNN() {
@@ -26,7 +26,7 @@ contract VNNN is ERC20, Authorizable {
     }
 
     function decimals() public pure override returns (uint8) {
-        return 4;
+        return 3;
     }
 
     function intAmount(uint256 input) public pure returns (uint256){
