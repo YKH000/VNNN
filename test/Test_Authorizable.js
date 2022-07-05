@@ -66,7 +66,7 @@ describe("Test Authorizable and Mint/Burn", function () {
     });
   });
 
-  describe("Mint/Burn", function () {
+  describe("Mint", function () {
     it("Should revoke attempts to mint by non-Authorized", async function () {
       await expect(vnnn.mint(owner.address, 100)).to.be.revertedWith(
         "VNNN: Caller not authorized to mint tokens"
@@ -98,5 +98,29 @@ describe("Test Authorizable and Mint/Burn", function () {
     });
 
     //Should not allow mint to overflow totalSupply
+  });
+
+  describe("Burn", async function () {
+    it("Should update users' balance after burning", async function () {
+      await vnnn.burn(100000);
+      expect(await vnnn.balanceOf(owner.address)).to.equal(9999900000);
+    });
+
+    it("Should update totalSupply after burning", async function () {
+      await vnnn.burn(100000);
+      expect(await vnnn.totalSupply()).to.equal(9999900000);
+    });
+
+    it("Should not allow users to burn more tokens than they own", async function () {
+      await expect(vnnn.connect(addr1).burn(100000)).to.be.revertedWith(
+        "ERC20: burn amount exceeds balance"
+      );
+    });
+
+    it("Should emit a transfer event after burning", async function () {
+      await expect(vnnn.burn(100000))
+        .to.emit(vnnn, "Transfer")
+        .withArgs(owner.address, constants.ZERO_ADDRESS, 100000);
+    });
   });
 });
