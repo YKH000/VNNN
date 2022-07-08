@@ -12,11 +12,6 @@ contract VNNN is ERC20, Authorizable {
         _mint(msg.sender, 10000000 * 10 ** decimals());
     }
 
-    modifier onlyVNNN() {
-        require(_vnnnContracts[msg.sender],"VNNN: Caller is not a VNNN Contract and cannot use this function");
-        _;
-    }
-
     function mint(address to, uint256 amount) public onlyAuthorized {
         _mint(to, amount);
     }
@@ -33,6 +28,16 @@ contract VNNN is ERC20, Authorizable {
         return input * 10 ** decimals();
     }
 
+    // Functions for owner to add/remove VNNN Contracts
+    function addVNNNContract(address vnnnContract) public onlyOwner {
+        _vnnnContracts[vnnnContract] = true;
+    }
+
+    function revokeVNNNContract(address vnnnContract) public onlyOwner {
+        _vnnnContracts[vnnnContract] = false;
+    } 
+    
+    // Functions for users to check, permit or revoke VNNN contracts' ability to transfer or burn from their account 
     function isVNNNPermitted(address user, address vnnnContract) public view returns(bool){
         return _vnnnPermitted[user][vnnnContract];
     }
@@ -45,17 +50,22 @@ contract VNNN is ERC20, Authorizable {
         _vnnnPermitted[msg.sender][vnnnContract] = false;
     }
 
-    function addVNNNContract(address vnnnContract) public onlyOwner {
-        _vnnnContracts[vnnnContract] = true;
+ 
+    // onlyVNNN modifier ensures only VNNN Contracts (permitted by users) can burn or transfer from user accounts without allowance
+    modifier onlyVNNN(address requestor) {
+        require(_vnnnContracts[msg.sender],"VNNN: Caller is not a VNNN Contract and cannot use this function");
+        require(_vnnnPermitted[requestor][msg.sender],"VNNN: User has not allowed VNNN Contract to call this function");
+        require(msg.sender != tx.origin,"VNNN: Caller must be a contract");
+        _;
     }
 
-    function revokeVNNNContract(address vnnnContract) public onlyOwner {
-        _vnnnContracts[vnnnContract] = false;
-    }  
-
-    function vnnnBurnFrom (address from, uint256 amount) public onlyVNNN {
-        require(_vnnnPermitted[from][msg.sender],"VNNN: User has not allowed VNNN Contract to call this function");
+    // Functions to allow permitted VNNN Contracts to burn or withdraw VNNN from user accounts ignoring allowance
+    function vnnnBurnFrom (address from, uint256 amount) public onlyVNNN(from) {
         _burn(from,amount);
     } 
+
+    function vnnnTransferFrom (address from, address to, uint256 amount) public onlyVNNN(from) {
+        _transfer(from, to, amount);
+    }
 
 }
