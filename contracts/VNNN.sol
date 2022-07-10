@@ -1,14 +1,14 @@
 pragma solidity >=0.8.0 <0.9.0;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "./Authorizable.sol";
 
-contract VNNN is ERC20, Authorizable {
+contract VNNN is ERC20Permit, Authorizable {
 
     mapping(address => bool) private _vnnnContracts;
     mapping(address => mapping(address => bool)) private _vnnnPermitted;
 
-    constructor() ERC20("VNNN", "VNNN") {
+    constructor() ERC20("VNNN", "VNNN") ERC20Permit("VNNN") {
         _mint(msg.sender, 10000000 * 10 ** decimals());
     }
 
