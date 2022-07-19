@@ -97,7 +97,11 @@ describe("Test Authorizable and Mint/Burn", function () {
         .withArgs(constants.ZERO_ADDRESS, addr1.address, 100);
     });
 
-    //Should not allow mint to overflow totalSupply
+    it("Should not allow mint to overflow totalSupply", async function () {
+      await vnnn.addAuthorized(owner.address);
+      await expect(vnnn.mint(owner.address, constants.MAX_UINT256)).to.be
+        .reverted;
+    });
   });
 
   describe("Burn", async function () {
