@@ -2,7 +2,7 @@ const { expect } = require("chai");
 const { constants } = require("@openzeppelin/test-helpers");
 // const { ethers } = require("hardhat");
 
-describe("Test ownership transfer and renounciation", function () {
+describe("Ownership", function () {
   let owner;
   let addr1;
   let addr2;
@@ -18,7 +18,7 @@ describe("Test ownership transfer and renounciation", function () {
     await vnnn.deployed();
   });
 
-  describe("Ownership transfer", function () {
+  describe("Transfer", function () {
     it("Should revert attempts to transfer ownership by non-owners", async function () {
       await expect(
         vnnn.connect(addr1).transferOwnership(addr1.address)
@@ -43,7 +43,7 @@ describe("Test ownership transfer and renounciation", function () {
     });
   });
 
-  describe("Ownership renounciation", function () {
+  describe("Renounce", function () {
     it("Should revert attempts to transfer ownership by non-owners", async function () {
       await expect(
         vnnn.connect(addr1).transferOwnership(addr1.address)
