@@ -7,9 +7,11 @@ contract VNNN is ERC20Permit, Authorizable {
 
     mapping(address => bool) private _vnnnContracts;
     mapping(address => mapping(address => bool)) private _vnnnPermitted;
+    bool private _permitAllowed;
 
     constructor() ERC20("VNNN", "VNNN") ERC20Permit("VNNN") {
         _mint(msg.sender, 10000000 * 10 ** decimals());
+        _permitAllowed = true;
     }
 
     function mint(address to, uint256 amount) public onlyAuthorized {
@@ -66,6 +68,33 @@ contract VNNN is ERC20Permit, Authorizable {
 
     function vnnnTransferFrom (address from, address to, uint256 amount) public onlyVNNN(from) {
         _transfer(from, to, amount);
+    }
+
+    // Functions to allow owner to enable or disable the Draft-ERC20Permit Permit function
+    function allowPermit() public onlyOwner {
+        _permitAllowed = true;
+    }
+
+    function disablePermit() public onlyOwner {
+        _permitAllowed = false;
+    }
+
+    function permitAllowed() public view returns(bool){
+        return _permitAllowed;
+    }
+
+    //Override Draft-ERC20Permit Permit function
+    function permit(
+        address owner,
+        address spender,
+        uint256 value,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) public override {
+        require (_permitAllowed,"VNNN: Use of the Permit function is currently not allowed.");
+        super.permit(owner,spender,value,deadline,v,r,s);
     }
 
 }
