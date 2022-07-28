@@ -99,8 +99,8 @@ describe("Test Authorizable and Mint/Burn", function () {
 
     it("Should revert attempts to overflow totalSupply", async function () {
       await vnnn.addAuthorized(owner.address);
-      await expect(vnnn.mint(addr1.address, Number(constants.MAX_UINT256))).to
-        .be.reverted;
+      await expect(vnnn.mint(owner.address, constants.MAX_UINT256)).to.be
+        .reverted;
     });
   });
 
