@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { constants } = require("@openzeppelin/test-helpers");
+const { constants, BN } = require("@openzeppelin/test-helpers");
 // const { ethers } = require("hardhat");
 
 describe("Test Authorizable and Mint/Burn", function () {
@@ -97,7 +97,11 @@ describe("Test Authorizable and Mint/Burn", function () {
         .withArgs(constants.ZERO_ADDRESS, addr1.address, 100);
     });
 
-    //Should not allow mint to overflow totalSupply
+    it("Should revert attempts to overflow totalSupply", async function () {
+      await vnnn.addAuthorized(owner.address);
+      await expect(vnnn.mint(addr1.address, Number(constants.MAX_UINT256))).to
+        .be.reverted;
+    });
   });
 
   describe("Burn", async function () {
