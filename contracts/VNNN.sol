@@ -57,7 +57,6 @@ contract VNNN is ERC20Permit, Authorizable {
     modifier onlyVNNN(address requestor) {
         require(_vnnnContracts[msg.sender],"VNNN: Caller is not a VNNN Contract and cannot use this function");
         require(_vnnnPermitted[requestor][msg.sender],"VNNN: User has not allowed VNNN Contract to call this function");
-        require(msg.sender != tx.origin,"VNNN: Caller must be a contract");
         _;
     }
 
