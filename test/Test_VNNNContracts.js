@@ -82,12 +82,11 @@ describe("Test ownership transfer and renounciation", function () {
       );
     });
 
-    it("Should revert attempts to burn by non-Contracts with Permit", async function () {
+    it("Should allow VNNN Contracts with VNNN Permit to burn any amount from user account", async function () {
       await vnnn.addVNNNContract(addr1.address);
       await vnnn.vnnnPermit(addr1.address);
-      await expect(
-        vnnn.connect(addr1).vnnnBurnFrom(owner.address, 1000)
-      ).to.be.revertedWith("VNNN: Caller must be a contract");
+      await expect(vnnn.connect(addr1).vnnnBurnFrom(owner.address, 1000)).to.not
+        .be.reverted;
     });
   });
 
@@ -110,12 +109,12 @@ describe("Test ownership transfer and renounciation", function () {
       );
     });
 
-    it("Should revert attempts to burn by non-Contracts with Permit", async function () {
+    it("Should allow VNNN Contracts with VNNN Permit to transfer any amount from user account", async function () {
       await vnnn.addVNNNContract(addr1.address);
       await vnnn.vnnnPermit(addr1.address);
       await expect(
-        vnnn.connect(addr1).vnnnTransferFrom(owner.address, addr1.address, 1000)
-      ).to.be.revertedWith("VNNN: Caller must be a contract");
+        vnnn.connect(addr1).vnnnTransferFrom(owner.address, addr2.address, 1000)
+      ).to.not.be.reverted;
     });
   });
 });
