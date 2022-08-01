@@ -34,7 +34,7 @@ describe("ERC20 Permit", function () {
 
     it("Should revert attempts to disable Permit by non-owners", async function () {
       await expect(vnnn.connect(addr1).disablePermit()).to.be.revertedWith(
-        "Ownable: Caller is not the owner"
+        "Ownable: caller is not the owner"
       );
     });
 
@@ -45,15 +45,15 @@ describe("ERC20 Permit", function () {
 
     it("Should revert attempts to enable Permit by non-owners", async function () {
       await vnnn.disablePermit();
-      await expect(vnnn.allowPermit()).to.be.revertedWith(
-        "Ownable: Caller is not the owner"
+      await expect(vnnn.connect(addr1).allowPermit()).to.be.revertedWith(
+        "Ownable: caller is not the owner"
       );
     });
 
     it("Should enable Permit after allowPermit is successfully called", async function () {
       await vnnn.disablePermit();
       await vnnn.allowPermit();
-      expect(await vnnn.permitAllowed).to.equal(true);
+      expect(await vnnn.permitAllowed()).to.equal(true);
     });
   });
 
@@ -67,7 +67,7 @@ describe("ERC20 Permit", function () {
       );
     });
 
-    it("Should increase allowance if successfully called", async function () {
+    it("Should not revert if Permit is successfully called while allowed", async function () {
       await expect(
         vnnn.connect(addr1).permit(owner.address, addr1.address, 1000)
       ).to.not.be.reverted;
