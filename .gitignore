@@ -36,6 +36,11 @@
 ehthumbs.db
 Thumbs.db
 
+# Other #
+#########
+*.env
+*.env.test
+
 # Folders #
 ###########
 node_modules/

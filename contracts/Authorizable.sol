@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -13,20 +14,20 @@ contract Authorizable is Ownable {
     event authorized(address indexed minter);
     event revoked(address indexed minter);
 
-    function addAuthorized(address _toAdd) onlyOwner public {
-        require(_toAdd != address(0));
-        _authorizedMinters[_toAdd] = true;
-        emit authorized(_toAdd);
+    function addAuthorized(address toAdd) onlyOwner public {
+        require(toAdd != address(0));
+        _authorizedMinters[toAdd] = true;
+        emit authorized(toAdd);
     }
 
-    function revokeAuthorized(address _toRemove) onlyOwner public {
-        require(_toRemove != address(0));
-        _authorizedMinters[_toRemove] = false;
-        emit revoked(_toRemove);
+    function revokeAuthorized(address toRemove) onlyOwner public {
+        require(toRemove != address(0));
+        _authorizedMinters[toRemove] = false;
+        emit revoked(toRemove);
     }
 
-    function isAuthorized(address _minter) public view returns (bool) {
-        require(_minter != address(0));
-        return _authorizedMinters[_minter];
+    function isAuthorized(address minter) public view returns (bool) {
+        require(minter != address(0));
+        return _authorizedMinters[minter];
     }
 }
