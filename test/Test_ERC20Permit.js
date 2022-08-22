@@ -112,64 +112,6 @@ describe("ERC20 Permit", function () {
       message: { owner, owner, value, nonce, deadline },
     });
 
-    it("Accepts owner signature", async function () {
-      const mydata = buildData(chainID, vnnn.address);
-      const signature = ethSigUtil.signTypedData({
-        privateKey: wallet.getPrivateKey(),
-        data: mydata,
-        version: ethSigUtil.SignTypedDataVersion.V4,
-      });
-      const { v, r, s } = fromRpcSig(signature);
-
-      const receipt = await vnnn.permit(
-        owner.address,
-        owner.address,
-        value,
-        maxDeadline,
-        v,
-        r,
-        s
-      );
-
-      expect(await vnnn.nonces(walletOwner)).to.equal(1);
-      expect(
-        await vnnn.allowance(walletOwner, addr1.address)
-      ).to.be.bignumber.equal(value);
-    });
-
-    it("Should revert if Permit is currently disabled", async function () {
-      const mydata = buildData(chainID, vnnn.address);
-      const signature = ethSigUtil.signTypedData({
-        privateKey: wallet.getPrivateKey(),
-        data: mydata,
-        version: ethSigUtil.SignTypedDataVersion.V4,
-      });
-      const { v, r, s } = fromRpcSig(signature);
-      await vnnn.disablePermit();
-      await expect(
-        vnnn
-          .connect(addr1)
-          .permit(owner.address, owner.address, 1000, maxDeadline, v, r, s)
-      ).to.be.revertedWith(
-        "VNNN: Use of the Permit function is currently not allowed."
-      );
-    });
-
-    it("Should not revert if Permit is successfully called while allowed", async function () {
-      const mydata = buildData(chainID, vnnn.address);
-      const signature = ethSigUtil.signTypedData({
-        privateKey: wallet.getPrivateKey(),
-        data: mydata,
-        version: ethSigUtil.SignTypedDataVersion.V4,
-      });
-      const { v, r, s } = fromRpcSig(signature);
-      await expect(
-        vnnn
-          .connect(addr1)
-          .permit(owner.address, owner.address, 1000, maxDeadline, v, r, s)
-      ).to.not.be.reverted;
-    });
-
     it("Should run when Permit is enabled", async function () {
       expect(await vnnn.permitAllowed()).to.equal(true);
     });
